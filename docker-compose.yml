@@ -2,14 +2,16 @@ version: "3"
 
 services:
   api:
-    links: mongo
-    dockerfile: Dockerfile.dev
-    context: .
+    build:
+      dockerfile: Dockerfile.dev
+      context: .
     volumes:
       - /app/node_modules
       - ./:/app
     ports:
       - "3000:3000"
+    links:
+      - mongo
   mongo:
     image: mongo
     volumes:
