@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+  api:
+    links: mongo
+    dockerfile: Dockerfile.dev
+    context: .
+    volumes:
+      - /app/node_modules
+      - ./:/app
+    ports:
+      - "3000:3000"
+  mongo:
+    image: mongo
+    volumes:
+      - /data/mongodb/db:/data/db
+    ports:
+      - "27017:27017"
