@@ -1,10 +1,15 @@
-import * as express from "express";
+import express from "express";
+
+interface Controller {
+  path: string;
+  router: express.IRouter;
+}
 
 export class App {
   public app: express.Application;
   public port: number;
 
-  constructor(controllers, port) {
+  constructor(port: number, controllers: Controller[]) {
     this.app = express();
     this.port = port;
     this.initializeMiddleware();
@@ -13,14 +18,14 @@ export class App {
   private initializeMiddleware = () => {
     this.app.use(express.json());
   };
-  private intializeControllers = controllers => {
+  private intializeControllers = (controllers: Controller[]) => {
     controllers.forEach(controller => {
       this.app.use("/", controller.router);
     });
   };
   public listen(): void {
     this.app.listen(this.port, () => {
-      console.log(`server running on ${port}`);
+      console.log(`server running on ${this.port}`);
     });
   }
 }
