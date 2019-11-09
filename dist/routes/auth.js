@@ -4,8 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
+var auth_1 = __importDefault(require("../controllers/auth"));
 var router = express_1.default.Router();
-router.get("/auth", function (req, res) {
+router
+    .get("/auth", function (req, res) {
     res.send("auth route");
-});
+})
+    .post("/register", auth_1.default.register)
+    .post("/login", auth_1.default.login);
 exports.default = router;
