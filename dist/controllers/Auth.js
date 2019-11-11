@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
+var express_validator_1 = require("express-validator");
 var AuthController = /** @class */ (function () {
     function AuthController() {
         var _this = this;
@@ -12,7 +13,19 @@ var AuthController = /** @class */ (function () {
         this.initializeRoutes = function () {
             _this.router.get("/", _this.rootRoute);
             _this.router.post(_this.path + "/login", _this.loginRoute);
-            _this.router.post(_this.path + "/register", _this.registerRoute);
+            _this.router.post(_this.path + "/register", [
+                express_validator_1.check("name")
+                    .isAlpha()
+                    .isLength({ min: 3 }),
+                express_validator_1.check("email")
+                    .isEmail()
+                    .withMessage("Not a valid email address"),
+                express_validator_1.check("password")
+                    .isLength({ min: 8 })
+                    .withMessage("password not long enough")
+                    .isAlphanumeric()
+                    .withMessage("password must container letters and numbers")
+            ], _this.registerRoute);
         };
         this.rootRoute = function (req, res) {
             res.send("Auth route");
@@ -21,7 +34,12 @@ var AuthController = /** @class */ (function () {
             res.send("login route");
         };
         this.registerRoute = function (req, res, next) {
-            res.send("register route");
+            var errors = express_validator_1.validationResult(req);
+            console.log(errors);
+            if (!errors.isEmpty()) {
+                return res.status(422).json({ errors: errors.array() });
+            }
+            return res.send("register route");
         };
         this.initializeRoutes();
     }

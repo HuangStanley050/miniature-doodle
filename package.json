@@ -37,6 +37,8 @@
     "typescript": "^3.7.2"
   },
   "dependencies": {
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "express-validator": "^6.2.0",
+    "mongoose": "^5.7.9"
   }
 }

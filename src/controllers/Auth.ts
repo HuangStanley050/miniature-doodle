@@ -1,4 +1,6 @@
 import express, { Request, Response, NextFunction, IRouter } from "express";
+import { check, validationResult } from "express-validator";
+import User from "../models/User";
 import { Controller } from "../App";
 
 class AuthController implements Controller {
@@ -10,7 +12,23 @@ class AuthController implements Controller {
   initializeRoutes = () => {
     this.router.get("/", this.rootRoute);
     this.router.post(`${this.path}/login`, this.loginRoute);
-    this.router.post(`${this.path}/register`, this.registerRoute);
+    this.router.post(
+      `${this.path}/register`,
+      [
+        check("name")
+          .isAlpha()
+          .isLength({ min: 3 }),
+        check("email")
+          .isEmail()
+          .withMessage("Not a valid email address"),
+        check("password")
+          .isLength({ min: 8 })
+          .withMessage("password not long enough")
+          .isAlphanumeric()
+          .withMessage("password must container letters and numbers")
+      ],
+      this.registerRoute
+    );
   };
   private rootRoute = (req: Request, res: Response) => {
     res.send("Auth route");
@@ -19,7 +37,12 @@ class AuthController implements Controller {
     res.send("login route");
   };
   private registerRoute = (req: Request, res: Response, next: NextFunction) => {
-    res.send("register route");
+    const errors = validationResult(req);
+    console.log(errors);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+    return res.send("register route");
   };
 }
 
