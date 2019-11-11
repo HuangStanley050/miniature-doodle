@@ -1,6 +1,7 @@
 import express from "express";
+import cors from "cors";
 
-interface Controller {
+export interface Controller {
   path: string;
   router: express.IRouter;
 }
@@ -17,10 +18,11 @@ export class App {
   }
   private initializeMiddleware = () => {
     this.app.use(express.json());
+    this.app.use(cors());
   };
   private intializeControllers = (controllers: Controller[]) => {
     controllers.forEach(controller => {
-      this.app.use("/", controller.router);
+      this.app.use("/api", controller.router);
     });
   };
   public listen(): void {

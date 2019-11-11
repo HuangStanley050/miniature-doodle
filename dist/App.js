@@ -4,15 +4,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
+var cors_1 = __importDefault(require("cors"));
 var App = /** @class */ (function () {
     function App(port, controllers) {
         var _this = this;
         this.initializeMiddleware = function () {
             _this.app.use(express_1.default.json());
+            _this.app.use(cors_1.default());
         };
         this.intializeControllers = function (controllers) {
             controllers.forEach(function (controller) {
-                _this.app.use("/", controller.router);
+                _this.app.use("/api", controller.router);
             });
         };
         this.app = express_1.default();

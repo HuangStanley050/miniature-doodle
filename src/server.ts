@@ -1,4 +1,6 @@
 import { App } from "./App";
-const app: any = new App(3000, []);
+import AuthController from "./controllers/Auth";
+const authController = new AuthController();
+const app: any = new App(3000, [authController]);
 
 app.listen();
