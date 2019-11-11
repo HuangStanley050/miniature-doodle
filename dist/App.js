@@ -11,7 +11,10 @@ var App = /** @class */ (function () {
     function App(port, controllers) {
         var _this = this;
         this.connectDatabase = function () {
-            mongoose_1.default.connect(dataBaseURI, { useNewUrlParser: true });
+            mongoose_1.default.connect(dataBaseURI, {
+                useNewUrlParser: true,
+                useUnifiedTopology: true
+            });
         };
         this.initializeMiddleware = function () {
             _this.app.use(express_1.default.json());

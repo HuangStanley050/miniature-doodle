@@ -20,7 +20,10 @@ export class App {
     this.intializeControllers(controllers);
   }
   private connectDatabase = () => {
-    mongoose.connect(dataBaseURI, { useNewUrlParser: true });
+    mongoose.connect(dataBaseURI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    });
   };
   private initializeMiddleware = () => {
     this.app.use(express.json());

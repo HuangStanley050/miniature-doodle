@@ -1,5 +1,7 @@
 import express, { Request, Response, NextFunction, IRouter } from "express";
 import { check, validationResult } from "express-validator";
+import bcrypt from "bcryptjs";
+
 import User from "../models/User";
 import { Controller } from "../App";
 
@@ -38,7 +40,9 @@ class AuthController implements Controller {
   };
   private registerRoute = (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
-    console.log(errors);
+    var salt = bcrypt.genSaltSync(10);
+    var hash = bcrypt.hashSync("B4c0//", salt);
+    console.log(hash);
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }

@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var express_validator_1 = require("express-validator");
+var bcryptjs_1 = __importDefault(require("bcryptjs"));
 var AuthController = /** @class */ (function () {
     function AuthController() {
         var _this = this;
@@ -35,7 +36,9 @@ var AuthController = /** @class */ (function () {
         };
         this.registerRoute = function (req, res, next) {
             var errors = express_validator_1.validationResult(req);
-            console.log(errors);
+            var salt = bcryptjs_1.default.genSaltSync(10);
+            var hash = bcryptjs_1.default.hashSync("B4c0//", salt);
+            console.log(hash);
             if (!errors.isEmpty()) {
                 return res.status(422).json({ errors: errors.array() });
             }
