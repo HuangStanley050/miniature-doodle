@@ -1,10 +1,14 @@
-import express from "express";
+import express, { Response, Request, NextFunction } from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 
 export interface Controller {
   path: string;
   router: express.IRouter;
+}
+export interface Error {
+  status: number;
+  message: string;
 }
 const dataBaseURI = "mongodb://mongo/users";
 
@@ -18,7 +22,20 @@ export class App {
     this.connectDatabase();
     this.initializeMiddleware();
     this.intializeControllers(controllers);
+    this.errorHandler();
   }
+  private errorHandler = () => {
+    this.app.use(
+      (err: Error, req: Request, res: Response, next: NextFunction) => {
+        const status = err.status || 500;
+        const message = err.message || "Something went wrong";
+        res.status(status).send({
+          status,
+          message
+        });
+      }
+    );
+  };
   private connectDatabase = () => {
     mongoose.connect(dataBaseURI, {
       useNewUrlParser: true,

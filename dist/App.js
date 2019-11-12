@@ -10,6 +10,16 @@ var dataBaseURI = "mongodb://mongo/users";
 var App = /** @class */ (function () {
     function App(port, controllers) {
         var _this = this;
+        this.errorHandler = function () {
+            _this.app.use(function (err, req, res, next) {
+                var status = err.status || 500;
+                var message = err.message || "Something went wrong";
+                res.status(status).send({
+                    status: status,
+                    message: message
+                });
+            });
+        };
         this.connectDatabase = function () {
             mongoose_1.default.connect(dataBaseURI, {
                 useNewUrlParser: true,
@@ -31,6 +41,7 @@ var App = /** @class */ (function () {
         this.connectDatabase();
         this.initializeMiddleware();
         this.intializeControllers(controllers);
+        this.errorHandler();
     }
     App.prototype.listen = function () {
         var _this = this;

@@ -40,7 +40,8 @@ var AuthController = /** @class */ (function () {
             var hash = bcryptjs_1.default.hashSync("B4c0//", salt);
             console.log(hash);
             if (!errors.isEmpty()) {
-                return res.status(422).json({ errors: errors.array() });
+                var error = { status: 402, message: "Unable to register" };
+                return next(error);
             }
             return res.send("register route");
         };

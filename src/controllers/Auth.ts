@@ -1,9 +1,9 @@
 import express, { Request, Response, NextFunction, IRouter } from "express";
 import { check, validationResult } from "express-validator";
 import bcrypt from "bcryptjs";
-
 import User from "../models/User";
 import { Controller } from "../App";
+import { Error } from "../App";
 
 class AuthController implements Controller {
   public path: string = "/auth";
@@ -44,7 +44,8 @@ class AuthController implements Controller {
     var hash = bcrypt.hashSync("B4c0//", salt);
     console.log(hash);
     if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.array() });
+      let error: Error = { status: 402, message: "Unable to register" };
+      return next(error);
     }
     return res.send("register route");
   };
