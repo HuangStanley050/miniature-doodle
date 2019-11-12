@@ -1,14 +1,16 @@
 import express, { Request, Response, NextFunction, IRouter } from "express";
 import { check, validationResult } from "express-validator";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import User from "../models/User";
 import { Controller } from "../App";
 import { Error } from "../App";
 
+const jwtSecret = "I am Superman";
 class AuthController implements Controller {
   public path: string = "/auth";
   public router: IRouter = express.Router();
-  private User = User;
+
   constructor() {
     this.initializeRoutes();
   }
@@ -36,7 +38,36 @@ class AuthController implements Controller {
   private rootRoute = (req: Request, res: Response) => {
     res.send("Auth route");
   };
-  private loginRoute = (req: Request, res: Response, next: NextFunction) => {
+  private loginRoute = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { email, password } = req.body;
+    try {
+      let user = await User.findOne({ email });
+      if (!user) {
+        throw new Error();
+      }
+      const passwordMatch = await bcrypt.compare(password, user.password);
+      if (!passwordMatch) {
+        let error = { status: 401, message: "Password doesn't match" };
+        return next(error);
+      }
+      const payload = {
+        id: user.id,
+        email: user.email
+      };
+      const userInfo = {
+        name: user.name,
+        email: user.email
+      };
+      const token = jwt.sign(payload, jwtSecret, { expiresIn: "1h" });
+      res.json({ login: "success", token, userInfo });
+    } catch (err) {
+      let error = { status: 400, message: "User doesn't exists" };
+      return next(error);
+    }
     res.send("login route");
   };
   private registerRoute = async (

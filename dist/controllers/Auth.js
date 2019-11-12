@@ -42,13 +42,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var express_validator_1 = require("express-validator");
 var bcryptjs_1 = __importDefault(require("bcryptjs"));
+var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var User_1 = __importDefault(require("../models/User"));
+var jwtSecret = "I am Superman";
 var AuthController = /** @class */ (function () {
     function AuthController() {
         var _this = this;
         this.path = "/auth";
         this.router = express_1.default.Router();
-        this.User = User_1.default;
         this.initializeRoutes = function () {
             _this.router.get("/", _this.rootRoute);
             _this.router.post(_this.path + "/login", _this.loginRoute);
@@ -69,11 +70,51 @@ var AuthController = /** @class */ (function () {
         this.rootRoute = function (req, res) {
             res.send("Auth route");
         };
-        this.loginRoute = function (req, res, next) {
-            res.send("login route");
-        };
+        this.loginRoute = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
+            var _a, email, password, user, passwordMatch, error, payload, userInfo, token, err_1, error;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = req.body, email = _a.email, password = _a.password;
+                        _b.label = 1;
+                    case 1:
+                        _b.trys.push([1, 4, , 5]);
+                        return [4 /*yield*/, User_1.default.findOne({ email: email })];
+                    case 2:
+                        user = _b.sent();
+                        if (!user) {
+                            throw new Error();
+                        }
+                        return [4 /*yield*/, bcryptjs_1.default.compare(password, user.password)];
+                    case 3:
+                        passwordMatch = _b.sent();
+                        if (!passwordMatch) {
+                            error = { status: 401, message: "Password doesn't match" };
+                            return [2 /*return*/, next(error)];
+                        }
+                        payload = {
+                            id: user.id,
+                            email: user.email
+                        };
+                        userInfo = {
+                            name: user.name,
+                            email: user.email
+                        };
+                        token = jsonwebtoken_1.default.sign(payload, jwtSecret, { expiresIn: "1h" });
+                        res.json({ login: "success", token: token, userInfo: userInfo });
+                        return [3 /*break*/, 5];
+                    case 4:
+                        err_1 = _b.sent();
+                        error = { status: 400, message: "User doesn't exists" };
+                        return [2 /*return*/, next(error)];
+                    case 5:
+                        res.send("login route");
+                        return [2 /*return*/];
+                }
+            });
+        }); };
         this.registerRoute = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
-            var _a, name, email, password, errors, salt, hash, error, result, error, newUser, err_1, error;
+            var _a, name, email, password, errors, salt, hash, error, result, error, newUser, err_2, error;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -106,7 +147,7 @@ var AuthController = /** @class */ (function () {
                         _b.sent();
                         return [2 /*return*/, res.send("User have registered!!")];
                     case 4:
-                        err_1 = _b.sent();
+                        err_2 = _b.sent();
                         error = { status: 500, message: "Unable to save user" };
                         return [2 /*return*/, next(error)];
                     case 5: return [2 /*return*/];
