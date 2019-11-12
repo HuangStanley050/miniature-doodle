@@ -8,6 +8,7 @@ import { Error } from "../App";
 class AuthController implements Controller {
   public path: string = "/auth";
   public router: IRouter = express.Router();
+  private User = User;
   constructor() {
     this.initializeRoutes();
   }
@@ -38,16 +39,39 @@ class AuthController implements Controller {
   private loginRoute = (req: Request, res: Response, next: NextFunction) => {
     res.send("login route");
   };
-  private registerRoute = (req: Request, res: Response, next: NextFunction) => {
+  private registerRoute = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { name, email, password } = req.body;
     const errors = validationResult(req);
     var salt = bcrypt.genSaltSync(10);
-    var hash = bcrypt.hashSync("B4c0//", salt);
-    console.log(hash);
+    var hash = bcrypt.hashSync(password, salt);
+
     if (!errors.isEmpty()) {
-      let error: Error = { status: 402, message: "Unable to register" };
+      let error: Error = { status: 400, message: "Unable to register" };
       return next(error);
     }
-    return res.send("register route");
+
+    let result = await User.find({ email });
+    console.log(result);
+    if (result.length !== 0) {
+      let error: Error = { status: 400, message: "User already registered" };
+      return next(error);
+    }
+    const newUser = new User({
+      name,
+      password: hash,
+      email
+    });
+    try {
+      await newUser.save();
+      return res.send("User have registered!!");
+    } catch (err) {
+      let error = { status: 500, message: "Unable to save user" };
+      return next(error);
+    }
   };
 }
 
