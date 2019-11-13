@@ -41,7 +41,7 @@ export class App {
   private connectDatabase = () => {
     mongoose.connect(mongoURI, {
       useNewUrlParser: true,
-      useUnifiedTopology: true
+      useUnifiedTopology: false
     });
   };
   private initializeMiddleware = () => {
