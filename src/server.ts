@@ -12,7 +12,7 @@ declare var process: {
 
 const port: number = process.env.PORT || 3000;
 const app = new App(port, [authController]);
-
-mongoose.connect(process.env.MONGODB_URI).then(() => {
+const dataBaseURI = "mongodb://mongo/users";
+mongoose.connect(process.env.MONGODB_URI || dataBaseURI).then(() => {
   app.listen();
 });

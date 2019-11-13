@@ -44,7 +44,7 @@ var express_validator_1 = require("express-validator");
 var bcryptjs_1 = __importDefault(require("bcryptjs"));
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var User_1 = __importDefault(require("../models/User"));
-var jwtSecret = "I am Superman";
+var jwtSecret = process.env.JWT_SECRET;
 var AuthController = /** @class */ (function () {
     function AuthController() {
         var _this = this;
@@ -54,9 +54,7 @@ var AuthController = /** @class */ (function () {
             _this.router.get("/", _this.rootRoute);
             _this.router.post(_this.path + "/login", _this.loginRoute);
             _this.router.post(_this.path + "/register", [
-                express_validator_1.check("name")
-                    .isAlpha()
-                    .isLength({ min: 3 }),
+                express_validator_1.check("name").isLength({ min: 3, max: 255 }),
                 express_validator_1.check("email")
                     .isEmail()
                     .withMessage("Not a valid email address"),

@@ -5,7 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var cors_1 = __importDefault(require("cors"));
-var mongoose_1 = __importDefault(require("mongoose"));
 var dataBaseURI = "mongodb://mongo/users";
 var App = /** @class */ (function () {
     function App(port, controllers) {
@@ -20,12 +19,6 @@ var App = /** @class */ (function () {
                 });
             });
         };
-        this.connectDatabase = function () {
-            mongoose_1.default.connect(dataBaseURI, {
-                useNewUrlParser: true,
-                useUnifiedTopology: true
-            });
-        };
         this.initializeMiddleware = function () {
             _this.app.use(express_1.default.json());
             _this.app.use(express_1.default.urlencoded({ extended: true }));
@@ -38,7 +31,6 @@ var App = /** @class */ (function () {
         };
         this.app = express_1.default();
         this.port = port;
-        this.connectDatabase();
         this.initializeMiddleware();
         this.intializeControllers(controllers);
         this.errorHandler();

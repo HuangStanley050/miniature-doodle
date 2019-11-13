@@ -5,6 +5,11 @@ import jwt from "jsonwebtoken";
 import User from "../models/User";
 import { Controller } from "../App";
 import { Error } from "../App";
+declare var process: {
+  env: {
+    JWT_SECRET: string;
+  };
+};
 
 const jwtSecret = process.env.JWT_SECRET;
 class AuthController implements Controller {
