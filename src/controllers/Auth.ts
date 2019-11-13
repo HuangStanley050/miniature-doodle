@@ -66,12 +66,11 @@ class AuthController implements Controller {
         email: user.email
       };
       const token = jwt.sign(payload, jwtSecret, { expiresIn: "1h" });
-      res.json({ login: "success", token, userInfo });
+      return res.json({ login: "success", token, userInfo });
     } catch (err) {
       let error = { status: 400, message: "User doesn't exists" };
       return next(error);
     }
-    res.send("login route");
   };
   private registerRoute = async (
     req: Request,
