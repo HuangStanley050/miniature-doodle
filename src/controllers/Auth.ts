@@ -20,9 +20,7 @@ class AuthController implements Controller {
     this.router.post(
       `${this.path}/register`,
       [
-        check("name")
-          .isAlpha()
-          .isLength({ min: 3 }),
+        check("name").isLength({ min: 3 }),
         check("email")
           .isEmail()
           .withMessage("Not a valid email address"),
