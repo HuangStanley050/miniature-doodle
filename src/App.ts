@@ -10,7 +10,6 @@ export interface Error {
   status: number;
   message: string;
 }
-const dataBaseURI = "mongodb://mongo/users";
 
 export class App {
   public app: express.Application;

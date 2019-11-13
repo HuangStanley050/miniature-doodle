@@ -99,15 +99,12 @@ var AuthController = /** @class */ (function () {
                             email: user.email
                         };
                         token = jsonwebtoken_1.default.sign(payload, jwtSecret, { expiresIn: "1h" });
-                        res.json({ login: "success", token: token, userInfo: userInfo });
-                        return [3 /*break*/, 5];
+                        return [2 /*return*/, res.json({ login: "success", token: token, userInfo: userInfo })];
                     case 4:
                         err_1 = _b.sent();
                         error = { status: 400, message: "User doesn't exists" };
                         return [2 /*return*/, next(error)];
-                    case 5:
-                        res.send("login route");
-                        return [2 /*return*/];
+                    case 5: return [2 /*return*/];
                 }
             });
         }); };

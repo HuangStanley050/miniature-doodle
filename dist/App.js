@@ -5,7 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var cors_1 = __importDefault(require("cors"));
-var dataBaseURI = "mongodb://mongo/users";
 var App = /** @class */ (function () {
     function App(port, controllers) {
         var _this = this;
