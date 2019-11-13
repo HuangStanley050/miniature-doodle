@@ -11,6 +11,8 @@ export interface Error {
   message: string;
 }
 const dataBaseURI = "mongodb://mongo/users";
+const mongoURI =
+  "mongodb://heroku_zgs22sg7:5b8hv4cl7p45sn67jq43v1sc5c@ds029817.mlab.com:29817/heroku_zgs22sg7";
 
 export class App {
   public app: express.Application;
@@ -37,7 +39,7 @@ export class App {
     );
   };
   private connectDatabase = () => {
-    mongoose.connect(dataBaseURI, {
+    mongoose.connect(mongoURI, {
       useNewUrlParser: true,
       useUnifiedTopology: true
     });
