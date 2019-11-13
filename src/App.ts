@@ -21,7 +21,7 @@ export class App {
   constructor(port: number, controllers: Controller[]) {
     this.app = express();
     this.port = port;
-    this.connectDatabase();
+    //this.connectDatabase();
     this.initializeMiddleware();
     this.intializeControllers(controllers);
     this.errorHandler();
@@ -38,12 +38,20 @@ export class App {
       }
     );
   };
-  private connectDatabase = () => {
-    mongoose.connect(mongoURI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: false
-    });
-  };
+  // private connectDatabase = () => {
+  //   mongoose.connect(
+  //     mongoURI,
+  //     {
+  //       useNewUrlParser: true,
+  //       useUnifiedTopology: false
+  //     },
+  //     (err: any, connection: any) => {
+  //       if (err) {
+  //         consle.log(err);
+  //       }
+  //     }
+  //   );
+  // };
   private initializeMiddleware = () => {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
