@@ -6,7 +6,7 @@ import User from "../models/User";
 import { Controller } from "../App";
 import { Error } from "../App";
 
-const jwtSecret = "I am Superman";
+const jwtSecret = process.env.JWT_SECRET;
 class AuthController implements Controller {
   public path: string = "/auth";
   public router: IRouter = express.Router();
@@ -20,7 +20,7 @@ class AuthController implements Controller {
     this.router.post(
       `${this.path}/register`,
       [
-        check("name").isLength({ min: 3 }),
+        check("name").isLength({ min: 3, max: 255 }),
         check("email")
           .isEmail()
           .withMessage("Not a valid email address"),
