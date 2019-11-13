@@ -1,6 +1,12 @@
 import { App } from "./App";
 import AuthController from "./controllers/Auth";
 const authController = new AuthController();
-const app: any = new App(3000, [authController]);
+declare var process: {
+  env: {
+    PORT: number;
+  };
+};
+const port: number = process.env.PORT || 3000;
+const app = new App(port, [authController]);
 
 app.listen();
